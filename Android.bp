@@ -71,12 +71,20 @@ cc_library {
             enabled: true,
         },
     },
-}
 
-cc_library_static {
-    name: "libz_current",
-    defaults: ["libz_defaults"],
-    sdk_version: "current",
+// TODO(b/155456180): make libz a stub-providing library by uncommenting below
+//    stubs: {
+//        versions: ["29", "30"],
+//        symbol_file: "libz.map.txt",
+//    },
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.art.debug", // from libdexfile
+        "com.android.art.release",
+        "com.android.bluetooth.updatable",
+        "com.android.runtime",
+    ],
 }
 
 cc_binary_host {
@@ -114,6 +122,21 @@ cc_binary {
 //     ],
 //     license: "NOTICE",
 // }
+
+// TODO(b/155351357) remove this library and let libtextclassifier to use libz
+// instead.
+// libz_current allows modules building against the NDK to have access to zlib
+// API that's not available from the NDK libz.
+cc_library_static {
+    name: "libz_current",
+    defaults: ["libz_defaults"],
+    sdk_version: "current",
+
+    apex_available: [
+        "//apex_available:platform", // indirectly from GoogleExtServices that gets installed to /system
+        "com.android.extservices", // indirectly via libtextclassifier
+    ],
+}
 
 ndk_library {
     name: "libz",
