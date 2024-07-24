@@ -185,6 +185,8 @@ cc_library {
         ],
         symbol_file: "libz.map.txt",
     },
+
+    afdo: true,
 }
 
 cc_library {
